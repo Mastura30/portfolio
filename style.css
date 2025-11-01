@@ -65,12 +65,12 @@ nav {
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-left: auto; /* Push nav to the right to make space for admin button */
+  margin-left: 30%; /* Push nav to the right to make space for admin button */
 }
 
 /* Navigation Links - Keep existing styles but make responsive */
 nav a {
-  margin: 0 0.5rem;
+  margin: auto;
   color: #fff;
   text-decoration: none;
   font-weight: 500;
