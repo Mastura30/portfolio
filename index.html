@@ -1,445 +1,781 @@
-<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mastura Jahan Maria-Portfolio</title>
+  <title data-editable="page-title">Mastura Jahan Maria - Portfolio</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
   <link rel="stylesheet" href="style.css" />
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 </head>
 <body>
-  <div id="particles-js"></div>
+<!-- Admin Login Modal -->
+<div id="admin-modal" class="admin-modal" style="display: none;">
+    <div class="admin-modal-content">
+        <h3>🔐 Admin Login</h3>
+        <input type="password" id="admin-password" placeholder="Enter admin password">
+        <div class="admin-modal-buttons">
+            <button onclick="loginAdmin()" class="btn btn-primary">Login</button>
+            <button onclick="hideAdminModal()" class="btn btn-outline">Cancel</button>
+        </div>
+    </div>
+</div>
 
+<!-- Add Form Container -->
+<div id="add-form-container" class="add-form-container" style="display: none;"></div>
+
+<!-- Enhanced Admin Panel -->
+<div id="admin-panel" class="admin-panel" style="display: none;">
+    <div class="admin-header">
+        <h3><i class="fas fa-edit"></i> Portfolio Editor</h3>
+        <button onclick="logoutAdmin()" class="btn btn-outline">Logout</button>
+    </div>
+    <div class="admin-controls">
+        <button onclick="enableEditing()" class="btn btn-primary">
+            <i class="fas fa-edit"></i> Enable Editing
+        </button>
+        <button onclick="saveAllChanges()" class="btn btn-success">
+            <i class="fas fa-save"></i> Save All Changes
+        </button>
+        <button onclick="resetToOriginal()" class="btn btn-warning">
+            <i class="fas fa-undo"></i> Reset Changes
+        </button>
+        <button onclick="resetToDefault()" class="btn btn-danger">
+            <i class="fas fa-trash"></i> Reset to Default
+        </button>
+    </div>
+    
+    <!-- CRUD Operations Section -->
+    <div class="admin-crud-section">
+        <h4>Manage Content</h4>
+        <div class="crud-buttons">
+            <button onclick="showAddForm('projects')" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i> Add Project
+            </button>
+            <button onclick="showAddForm('publications')" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i> Add Publication
+            </button>
+            <button onclick="showAddForm('experiences')" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i> Add Experience
+            </button>
+            <button onclick="showAddForm('achievements')" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i> Add Achievement
+            </button>
+        </div>
+    </div>
+    
+    <div class="admin-info">
+        <p><strong>Editing Tips:</strong></p>
+        <ul>
+            <li>Click "Enable Editing" to make content editable</li>
+            <li>Click on any text to edit it directly</li>
+            <li>Press Enter to save, Escape to cancel</li>
+            <li>Changes auto-save when you click away</li>
+            <li>Use "Save All Changes" to manually save</li>
+            <li>Use the Add buttons to create new items</li>
+            <li>Click edit/delete icons on items to manage them</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Admin Toggle Button -->
+<button id="admin-toggle" class="admin-toggle-btn" title="Admin Panel" style="margin-top: -1%;">
+    <i style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-size: larger; font-weight: bold;">M.J.</i><span class="admin-name" style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-size: larger; font-weight: bold;"> Maria</span>
+</button>
+
+  <div id="particles-js"></div>
   <div id="background-animation"></div>
 
   <header>
     <nav>
-      <a href="#">Home</a>
+      <a href="#hero">Home</a>
       <a href="#about">About</a>
       <a href="#education">Education</a>
       <a href="#skills">Skills</a>
-      <a href="#publications">Publications</a>
       <a href="#projects">Projects</a>
+      <a href="#publications">Publications</a>
+      <a href="#experiences">Experiences</a>
+      <a href="#achievements">Achievements</a>
       <a href="#contact">Contact</a>
     </nav>
   </header>
 
-  <section class="hero">
-    <div class="hero-left">
-      <h1>Hi There,<br>I'm <br> <span>Mastura Jahan Maria</span></h1>
-      <p>I am an undergrad student of<strong class="highlight"> Educational Technology and Engineering Department at University of Frontier Technology, Bangladesh</strong></p>
+  <section id="hero" class="hero">
+    <div class="hero-left" style="margin-left: 7%;">
+      <h1 data-editable="hero-title">Hi There,<br>I'm <br><span>Mastura Jahan Maria</span></h1>
+      <p class="welcome-text" data-editable="welcome-text">Welcome to my Portfolio Page!</p>
+      <p class="intro-text" data-editable="intro-text">I am an undergrad student of <strong class="highlight">Educational Technology and Engineering Department at University of Frontier Technology, Bangladesh</strong></p>
       <div class="cta-buttons">
-                <a href="#projects" class="btn">View My Work</a>
-                <a href="#contact" class="btn btn-outline">Contact Me</a>
-            </div>
-      <div class="social-icons">
-  <a href="https://www.linkedin.com/in/mastura-jahan-maria-bdu/" target="_blank"><i class="fab fa-linkedin"></i></a>
-  <a href="https://github.com/Mastura30" target="_blank"><i class="fab fa-github"></i></a>
-  <a href="https://t.me/maasturaaa" target="_blank"><i class="fab fa-telegram"></i></a>
-  <a href="https://www.instagram.com/maasturaa__/" target="_blank"><i class="fab fa-instagram"></i></a>
-  <a href="https://www.facebook.com/mastura.jahana.maria" target="_blank"><i class="fab fa-facebook"></i></a>
-</div>
-
+        <a href="#projects" class="btn btn-primary">View My Work <i class="fas fa-briefcase"></i></a>
+        <a href="#contact" class="btn btn-outline">Contact Me <i class="fab fa-telegram" style="font-size: larger;"></i></a>
+      </div>
     </div>
     <div class="hero-right">
-      <img src="me.jpg" alt="Mastura" />
+      <img src="me.jpg" alt="Mastura Jahan Maria"/>
     </div>
   </section>
 
   <section id="about" class="section">
-    <h2>About Me</h2>
-    <p style="text-align: justify; margin-left: 30px; margin-right: 70px;"> Enthusiastic and responsible undergraduate engineering studentwith a deep interest in education,technology, and social development. Passionate about integrating innovation and research to create practical solutions for learning and community growth. Skilled in communication, teamwork, and leadership, with experience in organizing events, managing content, and representing university programs. Dedicated to continuous learning and contributing meaningfully to projects that bridge technology and education for societal benefit.</p>
+    <h2 data-editable="about-title">About Me</h2>
+    <p class="about-description" data-editable="about-description">Enthusiastic and responsible undergraduate engineering student with a deep interest in education, technology, and social development. Passionate about integrating innovation and research to create practical solutions for learning and community growth. Skilled in communication, teamwork, and leadership, with experience in organizing events, managing content, and representing university programs. Dedicated to continuous learning and contributing meaningfully to projects that bridge technology and education for societal benefit.</p>
+    
+    <div class="about-contact-info">
+      <div class="contact-details">
+        <div class="contact-item" data-editable="address">
+          <i class="fas fa-map-marker-alt"></i>
+          <span>West Agargaon, Sher-E-Bangla Nagar, Dhaka-1207, Bangladesh</span>
+        </div>
+        <div class="contact-item" data-editable="email">
+          <i class="fas fa-envelope"></i>
+          <span>masturajahanmaria@gmail.com</a></span>
+        </div>
+        <div class="contact-item" data-editable="phone">
+          <i class="fas fa-phone"></i>
+          <span>+880 1735-164405</span>
+        </div>
+      </div>
+      <div class="cv-download">
+        <a href="Resume of MASTURA JAHAN MARIA.pdf" class="btn btn-primary" download>
+          <i class="fas fa-download"></i>
+          Download CV
+        </a>
+      </div>
+      <div class="social-icons" style="margin-top: -2%;">
+      <a href="https://www.linkedin.com/in/mastura-jahan-maria-bdu/" target="_blank"><i class="fab fa-linkedin"></i></a>
+      <a href="https://github.com/Mastura30" target="_blank"><i class="fab fa-github"></i></a>
+      <a href="https://t.me/maasturaaa" target="_blank"><i class="fab fa-telegram"></i></a>
+      <a href="https://orcid.org/0009-0005-9638-7928" target="_blank"><i class="fab fa-orcid"></i></a>
+      <a href="https://www.facebook.com/mastura.jahana.maria" target="_blank"><i class="fab fa-facebook"></i></a>
+    </div>
+    </div>
+  
+  </section>
+
   <section id="education" class="section">
-  <h2>Education</h2>
-  <div class="education-container">
-    <a href="https://uftb.ac.bd/" target="_blank" class="education-link">
-  <div class="education-card">
-    <h3>University</h3>
-    <p>University of Frontier Technology, Bangladesh<br></p>
-    <p>B.Sc. Engg. in Educational Technology and Engineering</p>
-    <p>2023 - Present </p>
-  </div>
-</a>
-
-    <a href="https://www.mmsc.edu.bd/" target="_blank" class="education-link">
-      <div class="education-card">
-        <h3>College</h3>
-        <p>Government Mohammadpur Model College, Dhaka-1207</p>
-        <p>Higher Secondary Certificate (HSC)</p>
-        <p>2020 - 2022</p>
-      </div>
-    </a>
-
-    <a href="https://www.sbngghs.edu.bd/" target="_blank" class="education-link">
-      <div class="education-card">
-        <h3>School</h3>
-        <p>Shere Bangla Nagar Government Girls High School, Dhaka-1207</p>
-        <p>Secondary School Certificate (SSC)</p>
-        <p>2010 - 2020</p>
-      </div>
-    </a>
-  </div>
-</section>
-
-  </section>
-
-  <section id="skills" class="section">
-  <h2>Skills</h2>
-  <div class="skills-container">
-    <div class="skill-category">
-      <h3>Technical Skills</h3>
-      <div class="skills-grid">
-        <div class="skill-item">
-          <div class="skill-info">
-            <i class="fab fa-html5"></i>
-            <span>HTML5</span>
-          </div>
-          <div class="progress-container">
-            <div class="progress-bar" style="width: 90%"></div>
-            <span class="progress-value">99%</span>
-          </div>
-        </div>
-        <div class="skill-item">
-          <div class="skill-info">
-            <i class="fab fa-css3-alt"></i>
-            <span>CSS3/SASS</span>
-          </div>
-          <div class="progress-container">
-            <div class="progress-bar" style="width: 85%"></div>
-            <span class="progress-value">90%</span>
-          </div>
-        </div>
-        <div class="skill-item">
-          <div class="skill-info">
-            <i class="fab fa-js"></i>
-            <span>JavaScript</span>
-          </div>
-          <div class="progress-container">
-            <div class="progress-bar" style="width: 75%"></div>
-            <span class="progress-value">75%</span>
-          </div>
-        </div>
-        <div class="skill-item">
-          <div class="skill-info">
-            <i class="fas fa-robot"></i>
-            <span>Automation</span>
-          </div>
-          <div class="progress-container">
-            <div class="progress-bar" style="width: 70%"></div>
-            <span class="progress-value">80%</span>
-          </div>
-        </div>
-        <div class="skill-item">
-          <div class="skill-info">
-            <i class="fab fa-git-alt"></i>
-            <span>Git/GitHub</span>
-          </div>
-          <div class="progress-container">
-            <div class="progress-bar" style="width: 80%"></div>
-            <span class="progress-value">90%</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="skill-category">
-      <h3>Professional Skills</h3>
-      <div class="skills-grid">
-        <div class="skill-item">
-          <i class="fas fa-lightbulb"></i>
-          <span>Problem Solving</span>
-        </div>
-        <div class="skill-item">
-          <i class="fas fa-users"></i>
-          <span>Human Resources</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<section id ="publications" class="section">
-  <h2>Publications</h2>
-
-  <div class="publication-card">
-    <h3>Deep transfer learning based disease detection and classification of tomato leaves - a comparative analysis</h3>
-    <p class="publication-desc"><br>
-    <a href="http://doi.org/10.12928/telkomnika.v23i5.26887" class="btn" target="_blank">View Article</a>
-  </div>
-
-</section>
-
-  <section id="projects" class="section" style="margin-left: 100px; margin-right: 100px;">
-  <h2>Projects</h2>
-  <div class="projects-container">
-    <div class="project-card">
-      <h3>Portfolio Website</h3>
-      <p class="project-desc"A fully responsive personal portfolio built with HTML, CSS, and JavaScript.</p>
-      <a href="#" class="btn">View Project</a>
-    </div>
-    <div class="project-card">
-      <h3>Ek Daake</h3>
-      <p class="project-desc">A social media platform with SIX exciting features.</p>
-      <a href="https://github.com/Mastura30/ek_daake" class="btn">View Project</a>
-    </div>
-    <div class="project-card">
-      <h3>LawnDry</h3>
-      <p class="project-desc">Digital Laundry Management System.</p>
-      <a href="https://github.com/Mastura30/LawnDry" class="btn" target="_blank">View Project</a>
-    </div>
-    <div class="project-card">
-      <h3>BloomWise</h3>
-      <p class="project-desc">A Bloom's Taxonomy based question analyzer (Working on).</p>
-      <a href="#" class="btn" target="_blank">View Project</a>
-    </div>
-    <div class="project-card">
-      <h3>Innovative Curriculum</h3>
-      <p class="project-desc">A grade 8 innovative curriculum for the students of Secondary Schools in Bangladesh.</p>
-      <a href="#" class="btn">View Project</a>
-    </div>
-  </div>
-</section>
-
-  <section id="contact" class="section">
-    <h2>Contact</h2>
-    <form action="mailto:masturajahanmaria@gmail.com" method="POST" enctype="text/plain">
-      <input type="text" placeholder="Your Name" required>
-      <input type="email" placeholder="Your Email" required>
-      <textarea rows="5" placeholder="Your Message" required></textarea>
-      <button type="submit" class="btn">Send Message</button>
-    </form>
-  </section>
-
-  <footer>
-    <p> Mastura Jahan Maria © 2025 All rights reserved </p>
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-  <script src="script.js"></script>
-</body>
-</html>
-=======
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mastura Jahan Maria-Portfolio</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div id="particles-js"></div>
-
-  <div id="background-animation"></div>
-
-  <header>
-    <nav>
-      <a href="#">Home</a>
-      <a href="#about">About</a>
-      <a href="#education">Education</a>
-      <a href="#skills">Skills</a>
-      <a href="#publications">Publications</a>
-      <a href="#projects">Projects</a>
-      <a href="#contact">Contact</a>
-    </nav>
-  </header>
-
-  <section class="hero">
-    <div class="hero-left">
-      <h1>Hi There,<br>I'm <br> <span>Mastura Jahan Maria</span></h1>
-      <p>I am an undergrad student of<strong class="highlight"> Educational Technology and Engineering Department at University of Frontier Technology, Bangladesh</strong></p>
-      <div class="cta-buttons">
-                <a href="#projects" class="btn">View My Work</a>
-                <a href="#contact" class="btn btn-outline">Contact Me</a>
+    <h2 data-editable="education-title">Learning Journey</h2>
+    <p class="education-subtitle" data-editable="education-subtitle">"My Academic Path Through The Years"</p>
+    
+    <div class="education-timeline">
+      <div class="timeline-line"></div>
+      
+      <div class="education-container">
+        <!-- University Card -->
+        <div class="education-card-wrapper">
+          <a href="https://bdu.ac.bd/" target="_blank" class="education-link">
+            <div class="education-card" data-year="2023-Present">
+              <div class="education-icon">
+                <i class="fas fa-university"></i>
+              </div>
+              <div class="education-content">
+                <h3 data-editable="edu-university-title">University</h3>
+                <p class="institution" data-editable="edu-university-institution">University of Frontier Technology, Bangladesh</p>
+                <p class="degree" data-editable="edu-university-degree">B.Sc. Engg. in Educational Technology and Engineering</p><br>
+                <p class="duration" data-editable="edu-university-duration">2023 - Present</p>
+                <div class="education-details">
+                  <div class="detail-item">
+                    <i class="fas fa-star"></i>
+                    <span>CGPA: 3.78/4.00 (till 4th Semester)</span>
+                  </div>
+                  <div class="detail-item">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Undergraduate Program</span>
+                  </div>
+                </div>
+              </div>
+              <div class="education-badge">Current</div>
             </div>
-      <div class="social-icons">
-  <a href="https://www.linkedin.com/in/mastura-jahan-maria-bdu/" target="_blank"><i class="fab fa-linkedin"></i></a>
-  <a href="https://github.com/Mastura30" target="_blank"><i class="fab fa-github"></i></a>
-  <a href="https://t.me/maasturaaa" target="_blank"><i class="fab fa-telegram"></i></a>
-  <a href="https://www.instagram.com/maasturaa__/" target="_blank"><i class="fab fa-instagram"></i></a>
-  <a href="https://www.facebook.com/mastura.jahana.maria" target="_blank"><i class="fab fa-facebook"></i></a>
-</div>
+          </a>
+        </div>
 
-    </div>
-    <div class="hero-right">
-      <img src="me.jpg" alt="Mastura" />
+        <!-- College Card -->
+        <div class="education-card-wrapper">
+          <a href="https://www.mmsc.edu.bd/" target="_blank" class="education-link">
+            <div class="education-card" data-year="2020-2022">
+              <div class="education-icon">
+                <i class="fas fa-school"></i>
+              </div>
+              <div class="education-content">
+                <h3 data-editable="edu-college-title">College</h3>
+                <p class="institution" data-editable="edu-college-institution">Government Mohammadpur Model School & College, Dhaka-1207</p>
+                <p class="degree" data-editable="edu-college-degree">Higher Secondary Certificate (HSC)</p><br>
+                <p class="duration" data-editable="edu-college-duration">2020 - 2022</p>
+                <div class="education-details">
+                  <div class="detail-item">
+                    <i class="fas fa-award"></i>
+                    <span>GPA: 5.00/5.00</span>
+                  </div>
+                  <div class="detail-item">
+                    <i class="fas fa-users"></i>
+                    <span>Science Group</span>
+                  </div>
+                </div>
+              </div>
+              <div class="education-badge">Completed</div>
+            </div>
+          </a>
+        </div>
+
+        <!-- School Card -->
+        <div class="education-card-wrapper">
+          <a href="https://www.sbngghs.edu.bd/" target="_blank" class="education-link">
+            <div class="education-card" data-year="2010-2020">
+              <div class="education-icon">
+                <i class="fas fa-graduation-cap"></i>
+              </div>
+              <div class="education-content">
+                <h3 data-editable="edu-school-title">School</h3>
+                <p class="institution" data-editable="edu-school-institution">Sher-E-Bangla Nagar Government Girls High School, Dhaka-1207</p>
+                <p class="degree" data-editable="edu-school-degree">Secondary School Certificate (SSC)</p><br>
+                <p class="duration" data-editable="edu-school-duration">2010 - 2020</p>
+                <div class="education-details">
+                  <div class="detail-item">
+                    <i class="fas fa-award"></i>
+                    <span>GPA: 5.00/5.00</span>
+                  </div>
+                  <div class="detail-item">
+                    <i class="fas fa-medal"></i>
+                    <span>Science Group</span>
+                  </div>
+                </div>
+              </div>
+              <div class="education-badge">Completed</div>
+            </div>
+          </a>
+        </div>
+      </div>
     </div>
   </section>
 
-  <section id="about" class="section">
-    <h2>About Me</h2>
-    <p>I’m a passionate web developer skilled in modern JavaScript frameworks, building responsive and dynamic websites that solve real problems.</p>
-  <section id="education" class="section">
-  <h2>Education</h2>
-  <div class="education-container">
-    <a href="https://uftb.ac.bd/" target="_blank" class="education-link">
-  <div class="education-card">
-    <h3>University</h3>
-    <p>University of Frontier Technology, Bangladesh<br></p>
-    <p>B.Sc. Engg. in Educational Technology and Engineering</p>
-    <p>2023 - Present </p>
-  </div>
-</a>
-
-    <a href="https://www.mmsc.edu.bd/" target="_blank" class="education-link">
-      <div class="education-card">
-        <h3>College</h3>
-        <p>Government Mohammadpur Model College, Dhaka-1207</p>
-        <p>Higher Secondary Certificate (HSC)</p>
-        <p>2020 - 2022</p>
+<section id="skills" class="section">
+    <h2 data-editable="skills-title">Skills</h2>
+    <p class="skills-subtitle" data-editable="skills-subtitle">"What I’ve Mastered Along the Way"</p>
+    <div class="skills-container">
+      <div class="skill-category">
+        <h3 data-editable="tech-skills-title">Technical Skills</h3>
+        <div class="skills-grid">
+          <div class="skill-item" data-editable="skill-html">
+            <div class="skill-info">
+              <i class="fab fa-html5"></i>
+              <span>HTML5</span>
+            </div>
+            <div class="progress-container">
+              <div class="progress-bar" style="width: 90%"></div>
+              <span class="progress-value">90%</span>
+            </div>
+          </div>
+          <div class="skill-item" data-editable="skill-css">
+            <div class="skill-info">
+              <i class="fab fa-css3-alt"></i>
+              <span>CSS3/SASS</span>
+            </div>
+            <div class="progress-container">
+              <div class="progress-bar" style="width: 85%"></div>
+              <span class="progress-value">85%</span>
+            </div>
+          </div>
+          <div class="skill-item" data-editable="skill-js">
+            <div class="skill-info">
+              <i class="fab fa-js"></i>
+              <span>JavaScript</span>
+            </div>
+            <div class="progress-container">
+              <div class="progress-bar" style="width: 75%"></div>
+              <span class="progress-value">75%</span>
+            </div>
+          </div>
+          <div class="skill-item" data-editable="skill-automation">
+            <div class="skill-info">
+              <i class="fas fa-robot"></i>
+              <span>Automation</span>
+            </div>
+            <div class="progress-container">
+              <div class="progress-bar" style="width: 70%"></div>
+              <span class="progress-value">70%</span>
+            </div>
+          </div>
+          <div class="skill-item" data-editable="skill-git">
+            <div class="skill-info">
+              <i class="fab fa-git-alt"></i>
+              <span>Git/GitHub</span>
+            </div>
+            <div class="progress-container">
+              <div class="progress-bar" style="width: 80%"></div>
+              <span class="progress-value">80%</span>
+            </div>
+          </div>
+        </div>
       </div>
-    </a>
-
-    <a href="https://www.sbngghs.edu.bd/" target="_blank" class="education-link">
-      <div class="education-card">
-        <h3>School</h3>
-        <p>Shere Bangla Nagar Government Girls High School, Dhaka-1207</p>
-        <p>Secondary School Certificate (SSC)</p>
-        <p>2010 - 2020</p>
+      <div class="skill-category">
+        <h3 data-editable="prof-skills-title">Soft Skills</h3>
+        <div class="skills-grid">
+          <div class="skill-item" data-editable="skill-problem-solving">
+            <i class="fas fa-lightbulb"></i>
+            <span>Problem Solving</span>
+          </div>
+          <div class="skill-item" data-editable="skill-hr">
+            <i class="fas fa-users"></i>
+            <span>Human Resources</span>
+          </div>
+          <div class="skill-item" data-editable="skill-communication">
+            <i class="fas fa-comments"></i>
+            <span>Communication</span>
+          </div>
+          <div class="skill-item" data-editable="skill-pm">
+            <i class="fas fa-tasks"></i>
+            <span>Project Management</span>
+          </div>
+        </div>
       </div>
-    </a>
-  </div>
-</section>
-
+    </div>
   </section>
 
-  <section id="skills" class="section">
-  <h2>Skills</h2>
-  <div class="skills-container">
-    <div class="skill-category">
-      <h3>Technical Skills</h3>
-      <div class="skills-grid">
-        <div class="skill-item">
-          <div class="skill-info">
-            <i class="fab fa-html5"></i>
-            <span>HTML5</span>
-          </div>
-          <div class="progress-container">
-            <div class="progress-bar" style="width: 90%"></div>
-            <span class="progress-value">99%</span>
-          </div>
+    <section id="projects" class="section">
+    <h2 data-editable="projects-title" style="margin-bottom: 3%;">Projects</h2>
+    <p class="projects-subtitle" data-editable="projects-subtitle">"Where Imagination Meets Execution"</p>
+    <div class="projects-container" id="projects-container">
+        <!-- Project Template (Hidden) -->
+        <div class="project-card template" style="display: none;">
+            <h3 data-field="title">Project Title</h3>
+            <p class="project-desc" data-field="description">Project description will appear here.</p>
+            <a href="#" class="btn btn-primary" data-link="link">View Project</a>
         </div>
-        <div class="skill-item">
-          <div class="skill-info">
-            <i class="fab fa-css3-alt"></i>
-            <span>CSS3/SASS</span>
-          </div>
-          <div class="progress-container">
-            <div class="progress-bar" style="width: 85%"></div>
-            <span class="progress-value">90%</span>
-          </div>
+        
+        <!-- Static Projects - These will always show -->
+        <div class="project-card static-project" data-editable="project-portfolio">
+            <h3>Portfolio Website</h3>
+            <p class="project-desc">A fully responsive personal portfolio built with HTML, CSS, and JavaScript.</p>
+            <a href="#" class="btn btn-primary">View Project</a>
         </div>
-        <div class="skill-item">
-          <div class="skill-info">
-            <i class="fab fa-js"></i>
-            <span>JavaScript</span>
-          </div>
-          <div class="progress-container">
-            <div class="progress-bar" style="width: 75%"></div>
-            <span class="progress-value">75%</span>
-          </div>
+        <div class="project-card static-project" data-editable="project-app">
+            <h3>Ek Daake</h3>
+            <p class="project-desc">A social media platform with SIX essential features.</p>
+            <a href="https://github.com/Mastura30/ek_daake" target="_blank" class="btn btn-primary">View Project</a>
         </div>
-        <div class="skill-item">
-          <div class="skill-info">
-            <i class="fas fa-robot"></i>
-            <span>Automation</span>
-          </div>
-          <div class="progress-container">
-            <div class="progress-bar" style="width: 70%"></div>
-            <span class="progress-value">80%</span>
-          </div>
+        <div class="project-card static-project" data-editable="project-blooms">
+            <h3>BloomWise</h3>
+            <p class="project-desc">Bloom's Taxonomy based question analyzer.</p>
+            <a href="https://bloom-wise.onrender.com" class="btn btn-primary" target="_blank">View Project</a>
         </div>
-        <div class="skill-item">
-          <div class="skill-info">
-            <i class="fab fa-git-alt"></i>
-            <span>Git/GitHub</span>
-          </div>
-          <div class="progress-container">
-            <div class="progress-bar" style="width: 80%"></div>
-            <span class="progress-value">90%</span>
-          </div>
+        <div class="project-card static-project" data-editable="project-blood">
+            <h3>Blood Hub</h3>
+            <p class="project-desc">Digital Blood Donation Management System.</p>
+            <a href="https://github.com/Mastura30/blood_hub" class="btn btn-primary" target="_blank">View Project</a>
+        </div>
+        <div class="project-card static-project" data-editable="project-os">
+            <h3>Time Slice Optimizer</h3>
+            <p class="project-desc">Visual representation of Different OS Algorithms.</p>
+            <a href="https://github.com/Mastura30/BDUTimeSliceOptimizer" class="btn btn-primary">View Project</a>
+        </div>
+        <div class="project-card static-project" data-editable="project-curriculum">
+            <h3>Innovative Curriculum</h3>
+            <p class="project-desc">Innovative Learning: A Grade 8 Competency-Based Curriculum for Secondary Schools in Bangladesh.</p>
+            <a href="certificates/curriculum.pdf" class="btn btn-primary">View Project</a>
+        </div>
+    </div>
+  </section>
+
+<section id="publications" class="section">
+    <h2 data-editable="publications-title">Publications & Research</h2>
+    <p class="publications-subtitle" data-editable="publications-subtitle">"My Academic Publications, Research Papers, and Conference Proceedings"</p>
+    
+    <!-- Publication Filter Buttons -->
+    <div class="publication-filters" style="margin-bottom: 3%;">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="journal">Journal Paper</button>
+        <button class="filter-btn" data-filter="conference">Conference Paper</button>
+        <button class="filter-btn" data-filter="book">Book Chapter</button>
+    </div>
+    
+    <div class="publications-container" id="publications-container">
+        <!-- Publication Template (Hidden) -->
+        <div class="publication-card template" style="display: none; align-items: center;">
+            <div class="publication-badge journal-badge">
+                <i class="fas fa-book"></i>
+                Journal Paper
+            </div>
+            <div class="status-badge published-badge">
+                <i class="fas fa-check-circle"></i>
+                
+            </div>
+            <div class="publication-header">
+                <h3 data-field="title">Publication Title</h3>
+                <span class="publication-date" data-field="date">Date</span>
+            </div>
+            <p class="publication-journal" data-field="journal">
+                <strong data-field="journal">Journal Name</strong>
+            </p>
+            <div class="publication-links">
+                <a href="#" class="btn btn-outline" data-link="link">
+                    <i class="fas fa-external-link-alt"></i> View Paper
+                </a>
+            </div>
+        </div>
+
+        <!-- Published Journal Paper -->
+        <div class="publication-card" data-editable="publication-1" data-category="journal" data-status="published">
+            <div class="publication-badge journal-badge">
+                <i class="fas fa-book"></i>
+                Journal Paper
+            </div>
+            <div class="status-badge published-badge">
+                <i class="fas fa-check-circle"></i>
+                
+            </div>
+            <div class="publication-header">
+                <h3>Deep transfer learning based disease detection and classification of tomato leaves - a comparative analysis</h3>
+                <span class="publication-date" data-editable="publication-1-date">October 10, 2025</span>
+            </div>
+            <p class="publication-journal" data-editable="publication-1-journal">
+                <strong>TELKOMNIKA (Telecommunication Computing Electronics and Control)</strong>
+            </p>
+            <div class="publication-links">
+                <a href="http://doi.org/10.12928/telkomnika.v23i5.26887" class="btn btn-outline" data-editable="publication-1-link" target="_blank">
+                    <i class="fas fa-external-link-alt"></i> View Paper
+                </a>
+                <a href="/certificates/[TELKOMNIKA] Certificate.pdf" class="btn btn-primary certificate-btn" data-certificate="publication-1-cert">
+                    <i class="fas fa-award"></i> View Certificate
+                </a>
+            </div>
+        </div>
+
+        <!-- Under Review Book Chapter -->
+        <div class="publication-card" data-editable="publication-2" data-category="book" data-status="under-review">
+            <div class="publication-badge chapter-badge">
+                <i class="fas fa-book-open"></i>
+                Book Chapter
+            </div>
+            <div class="status-badge review-badge">
+                <i class="fas fa-hourglass-half"></i>
+            
+            </div>
+            <div class="publication-header">
+                <h3>Disconnected Learning: Educational Disruptions During the Quota Movement's Internet Blackout in Bangladesh</h3>
+                <span class="publication-date" data-editable="publication-2-date">Under Review</span>
+            </div>
+            <p class="publication-journal" data-editable="publication-2-journal">
+                <strong>Education in Times of Crisis: Global Perspectives</strong>
+            </p>
+            <div class="publication-links">
+                <a href="#" class="btn btn-outline" data-editable="publication-2-link">
+                    <i class="fas fa-external-link-alt"></i> View Abstract
+                </a>
+            </div>
         </div>
       </div>
     </div>
-    <div class="skill-category">
-      <h3>Professional Skills</h3>
-      <div class="skills-grid">
-        <div class="skill-item">
-          <i class="fas fa-lightbulb"></i>
-          <span>Problem Solving</span>
-        </div>
-        <div class="skill-item">
-          <i class="fas fa-users"></i>
-          <span>Human Resources</span>
-        </div>
-      </div>
-    </div>
-  </div>
 </section>
 
 
-<section id ="publications" class="section">
-  <h2>Publications</h2>
 
-  <div class="publication-card">
-    <h3>Deep transfer learning based disease detection and classification of tomato leaves - a comparative analysis</h3>
-    <p class="publication-desc"><br>
-    <a href="http://doi.org/10.12928/telkomnika.v23i5.26887" class="btn" target="_blank">View Article</a>
-  </div>
+  <section id="experiences" class="section">
+    <h2 data-editable="experiences-title">Experiences</h2>
+    <p class="experiences-subtitle" data-editable="experiences-subtitle">"The Journey That Built My Professional Self"</p>
+    
+    <div class="experiences-container" id="experiences-container">
+        <!-- Experience Template (Hidden) -->
+        <div class="experience-card template" style="display: none;">
+            <div class="experience-header">
+                <div class="experience-icon">
+                    <i class="fas fa-laptop-code"></i>
+                </div>
+                <div class="experience-title">
+                    <h3 data-field="role">Role/Position</h3>
+                    <p class="company" data-field="company">Company Name</p>
+                    <p class="duration" data-field="duration">Duration</p>
+                </div>
+            </div>
+            <div class="experience-details" data-field="details" data-html="true">
+                <!-- Details will be populated here -->
+            </div>
+            <div class="experience-proof">
+                <a href="#" class="proof-btn" data-link="proof">
+                    <i class="fas fa-certificate"></i> View Proof
+                </a>
+            </div>
+        </div>
 
+        <!-- Row 1 -->
+        <div class="experience-card">
+            <div class="experience-header">
+                <div class="experience-icon">
+                    <i class="fas fa-bullhorn"></i>
+                </div>
+                <div class="experience-title">
+                    <h3>Assistant Head of Communications</h3>
+                    <p class="company">Hult Prize, UFTB</p>
+                    <p class="duration">February 2025 - Present</p>
+                </div>
+            </div>
+            <div class="experience-details">
+                
+                    <li>Leading communication strategies</li>
+                    <li>Developing communication plans</li>
+                    <li>Managing digital presence</li>
+                
+            </div>
+            <div class="experience-proof">
+                <a href="certificates/HP BDU.jpeg" class="proof-btn" target="_blank">
+                    <i class="fas fa-certificate"></i> View Certificate
+                </a>
+            </div>
+        </div>
+
+        <div class="experience-card">
+            <div class="experience-header">
+                <div class="experience-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="experience-title">
+                    <h3>Brain Games Secretary</h3>
+                    <p class="company">UFTB Math Club</p>
+                    <p class="duration">September 2025 - Present</p>
+                </div>
+            </div>
+            <div class="experience-details">
+                
+                    <li>Organizing math competitions</li>
+                    <li>Designing problem sets</li>
+                    <li>Facilitating workshops</li>
+                
+            </div>
+            <div class="experience-proof">
+                <a href="certificates/Math Squad.jpg" class="proof-btn" target="_blank">
+                    <i class="fas fa-certificate"></i> View Appointment
+                </a>
+            </div>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="experience-card">
+            <div class="experience-header">
+                <div class="experience-icon">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <div class="experience-title">
+                    <h3>Campus Ambassador</h3>
+                    <p class="company">SparkTank'24, Niter Career Club</p>
+                    <p class="duration">July 2024 - September 2024</p>
+                </div>
+            </div>
+            <div class="experience-details">
+                
+                    <li>Promoted career initiatives</li>
+                    <li>Recruited participants</li>
+                    <li>Awarded Best Ambassador</li>
+                
+            </div>
+            <div class="experience-proof">
+                <a href="certificates/CA at NITER.png" class="proof-btn" target="_blank">
+                    <i class="fas fa-award"></i> View Award
+                </a>
+            </div>
+        </div>
+
+        <div class="experience-card">
+            <div class="experience-header">
+                <div class="experience-icon">
+                    <i class="fas fa-broadcast-tower"></i>
+                </div>
+                <div class="experience-title">
+                    <h3>Junior Program Presenter</h3>
+                    <p class="company">Bangladesh Betar 100.0 FM</p>
+                    <p class="duration">July 2019 - March 2022</p>
+                </div>
+            </div>
+            <div class="experience-details">
+                
+                    <li>Hosted educational programs</li>
+                    <li>Developed youth content</li>
+                    <li>Interviewed experts</li>
+                
+            </div>
+            <div class="experience-proof">
+                <a href="certificates/radio-presenter-certificate.pdf" class="proof-btn" target="_blank">
+                    <i class="fas fa-file-contract"></i> View Letter
+                </a>
+            </div>
+        </div>
+
+        <!-- Row 3 (single card centered) -->
+        <div class="experience-card">
+            <div class="experience-header">
+                <div class="experience-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="experience-title">
+                    <h3>Deputy Organizing Secretary</h3>
+                    <p class="company">SBNGGS Debate Club</p>
+                    <p class="duration">March 2018 - January 2020</p>
+                </div>
+            </div>
+            <div class="experience-details">
+                
+                    <li>Organized debate competitions</li>
+                    <li>Coordinated tournaments</li>
+                    <li>Mentored junior debaters</li>
+              
+            </div>
+            <div class="experience-proof">
+                <a href="certificates/debate-club-certificate.pdf" class="proof-btn" target="_blank">
+                    <i class="fas fa-certificate"></i> View Certificate
+                </a>
+            </div>
+        </div>
+    </div>
 </section>
 
-  <section id="projects" class="section">
-  <h2>Projects</h2>
-  <div class="projects-container">
-    <div class="project-card">
-      <h3>Portfolio Website</h3>
-      <p class="project-desc">A fully responsive personal portfolio built with HTML, CSS, and JavaScript.</p>
-      <a href="#" class="btn">View Project</a>
+  <section id="achievements" class="section">
+    <h2 data-editable="achievements-title">Achievements</h2>
+    <p class="achievements-subtitle" data-editable="achievements-subtitle">"Milestones That Mark My Growth"</p>
+    
+    <div class="achievements-container" id="achievements-container">
+        <!-- Achievement Template (Hidden) -->
+        <div class="achievement-card template" style="display: none;">
+            <div class="achievement-icon">
+                <i class="fas fa-trophy"></i>
+            </div>
+            <div class="achievement-content">
+                <h3 data-field="title">Achievement Title</h3>
+                <p class="achievement-org" data-field="organization">Organization</p>
+                <p class="achievement-date" data-field="date">Date</p>
+            </div>
+            <div class="achievement-certificate">
+                <a href="#" class="certificate-link" data-link="certificate">
+                    <i class="fas fa-award"></i> View Certificate
+                </a>
+            </div>
+        </div>
+
+        <!-- Effective Leadership Program Certificate -->
+        <div class="achievement-card">
+            <div class="achievement-icon">
+                <i class="fas fa-certificate"></i>
+            </div>
+            <div class="achievement-content">
+                <h3>Effective Leadership Program Certificate</h3>
+                <p class="achievement-org">Bangla Innovator</p>
+                <p class="achievement-date">2025</p>
+            </div>
+            <div class="achievement-certificate">
+                <a href="certificates/BIT-2500108_Mastura Jahan Maria.pdf" class="certificate-link" target="_blank">
+                    <i class="fas fa-award"></i> View Certificate
+                </a>
+            </div>
+        </div>
+
+        <!-- Champion in SparkTank'24 Battle of Masterminds -->
+        <div class="achievement-card">
+            <div class="achievement-icon">
+                <i class="fas fa-trophy"></i>
+            </div>
+            <div class="achievement-content">
+                <h3>Champion in SparkTank'24 Battle of Masterminds</h3>
+                <p class="achievement-org">Niter Career Club</p>
+                <p class="achievement-date">2024</p>
+            </div>
+            <div class="achievement-certificate">
+                <a href="certificates/Champion at NITER.png" class="certificate-link" target="_blank">
+                    <i class="fas fa-award"></i> View Certificate
+                </a>
+            </div>
+        </div>
+
+        <!-- 21st Century Core Employability Skills Development Certificate -->
+        <div class="achievement-card">
+            <div class="achievement-icon">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div class="achievement-content">
+                <h3>21st Century Core Employability Skills Development Certificate</h3>
+                <p class="achievement-org">Wadhwani Foundation</p>
+                <p class="achievement-date">2023</p>
+            </div>
+            <div class="achievement-certificate">
+                <a href="certificates/employability-skills-certificate.pdf" class="certificate-link" target="_blank">
+                    <i class="fas fa-award"></i> View Certificate
+                </a>
+            </div>
+        </div>
     </div>
-    <div class="project-card">
-      <h3>Weather App</h3>
-      <p class="project-desc">Working on.</p>
-      <a href="#" class="btn">View Project</a>
-    </div>
-    <div class="project-card">
-      <h3>Online-Examination Management System</h3>
-      <p class="project-desc">Teacher can add, delete and modify questions. Students can perform exams and see total results.</p>
-      <a href="https://github.com/Ifty3/Online-Examination-Management-System" class="btn" target="_blank">View Project</a>
-    </div>
-    <div class="project-card">
-      <h3>Library Management System</h3>
-      <p class="project-desc">Stores book and staff information using HTML, CSS, JavaScript, and Node.js with database integration.</p>
-      <a href="https://github.com/Ifty3/Library-Management-System" class="btn" target="_blank">View Project</a>
-    </div>
-    <div class="project-card">
-      <h3>Calculator</h3>
-      <p class="project-desc">Performs Add, Subtract, Multiply, Divide, Square, Root, Prime, Palindrome, Fibonacci, Factorial, Matrix operations, and more.</p>
-      <a href="#" class="btn">View Project</a>
-    </div>
-  </div>
 </section>
 
   <section id="contact" class="section">
-    <h2>Contact</h2>
-    <form action="mailto:masturajahanmaria@gmail.com" method="POST" enctype="text/plain">
-      <input type="text" placeholder="Your Name" required>
-      <input type="email" placeholder="Your Email" required>
-      <textarea rows="5" placeholder="Your Message" required></textarea>
-      <button type="submit" class="btn">Send Message</button>
+    <h2 data-editable="contact-title">Contact</h2>
+    <p class="contact-subtitle" data-editable="contact-subtitle">"Let’s Connect and Create Something Amazing"</p>
+
+    <!-- Contact Form -->
+    <form id="contact-form" action="mailto:masturajahanmaria@gmail.com" method="POST" enctype="text/plain" style="margin-bottom: 3%;">
+        <input type="text" placeholder="Your Name" required>
+        <input type="email" placeholder="Your Email" required>
+        <textarea rows="5" placeholder="Your Message" required></textarea>
+        <button type="submit" class="btn btn-primary">Send Message</button>
     </form>
-  </section>
+    
+    <!-- Quick Contact Options -->
+    <div class="quick-contact-options">
+        <div class="contact-option">
+            <div class="contact-icon">
+                <i class="fas fa-phone"></i>
+            </div>
+            <div class="contact-info">
+                <h3>Call Now</h3>
+                <p>Let's have a conversation</p>
+                <a href="tel:+8801735164405" class="btn btn-primary contact-btn">
+                    <i class="fas fa-phone"></i> Call me
+                </a>
+            </div>
+        </div>
+        
+        <div class="contact-option">
+            <div class="contact-icon">
+                <i class="fas fa-envelope"></i>
+            </div>
+            <div class="contact-info">
+                <h3>Send Email</h3>
+                <p>Get in touch via email</p>
+                <a href="/cdn-cgi/l/email-protection#127f73616667607378737a737c7f73607b7352757f737b7e3c717d7f" class="btn btn-primary contact-btn">
+                    <i class="fas fa-envelope"></i> Send Email
+                </a>
+            </div>
+        </div>
+        
+        <div class="contact-option">
+            <div class="contact-icon">
+                <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <div class="contact-info">
+                <h3>View Map</h3>
+                <p>Find my location</p>
+                <a href="https://maps.google.com/?q=West+Agargaon,Sher-E-Bangla+Nagar,Dhaka-1207,Bangladesh" target="_blank" class="btn btn-primary contact-btn">
+                    <i class="fas fa-map-marker-alt"></i> View on Map
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
 
   <footer>
-    <p> Mastura Jahan Maria © 2025 All rights reserved </p>
+    <p data-editable="footer-text">Mastura Jahan Maria © 2025 All rights reserved</p>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <!-- Certificate Modal -->
+  <div id="certificate-modal" class="certificate-modal" style="display: none;">
+    <div class="certificate-modal-content">
+      <span class="close-certificate">&times;</span>
+      <h3>Certificate</h3>
+      <div class="certificate-view">
+        <img id="certificate-image" src="" alt="Certificate">
+        <p id="certificate-description"></p>
+      </div>
+    </div>
+  </div>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
   <script src="script.js"></script>
-</body>
+  <script src="firebase-config.js"></script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'997992fd682edaef',t:'MTc2MTk4MTA0NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
->>>>>>> bb88f246f4c91bf71740adc68874e153fd696c2f

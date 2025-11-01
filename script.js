@@ -1,155 +1,517 @@
-<<<<<<< HEAD
 particlesJS("particles-js", {
-  "particles": {
-    "number": {
-      "value": 80,
-      "density": { "enable": true, "value_area": 800 }
+  particles: {
+    number: { value: 80, density: { enable: true, value_area: 800 } },
+    color: { value: "#90caf9" },
+    shape: { type: "circle" },
+    opacity: { value: 0.5, random: true },
+    size: { value: 3, random: true },
+    line_linked: {
+      enable: true,
+      distance: 150,
+      color: "#42a5f5",
+      opacity: 0.4,
+      width: 1
     },
-    "color": { "value": "#ffffff" },
-    "shape": {
-      "type": "circle",
-      "stroke": { "width": 0, "color": "#000000" }
-    },
-    "opacity": {
-      "value": 0.5,
-      "random": false
-    },
-    "size": {
-      "value": 3,
-      "random": true
-    },
-    "line_linked": {
-      "enable": true,
-      "distance": 150,
-      "color": "#ffffff",
-      "opacity": 0.4,
-      "width": 1
-    },
-    "move": {
-      "enable": true,
-      "speed": 2,
-      "direction": "none",
-      "straight": false,
-      "out_mode": "bounce"
+    move: {
+      enable: true,
+      speed: 2,
+      direction: "none",
+      random: true,
+      straight: false,
+      out_mode: "out",
+      bounce: false
     }
   },
-  "interactivity": {
-    "detect_on": "canvas",
-    "events": {
-      "onhover": { "enable": true, "mode": "grab" },
-      "onclick": { "enable": true, "mode": "push" }
-    },
-    "modes": {
-      "grab": { "distance": 200, "line_linked": { "opacity": 1 } },
-      "push": { "particles_nb": 4 }
+  interactivity: {
+    detect_on: "canvas",
+    events: {
+      onhover: { enable: true, mode: "repulse" },
+      onclick: { enable: true, mode: "push" },
+      resize: true
     }
   },
-  "retina_detect": true
+  retina_detect: true
 });
 
-// Animate progress bars when skills section is in view
-function animateProgressBars() {
-  const skillsSection = document.getElementById('skills');
+document.querySelectorAll('nav a').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    const targetId = this.getAttribute('href');
+    if (targetId !== '#') {
+      const targetElement = document.querySelector(targetId);
+      if (targetElement) {
+        targetElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }
+  });
+});
+
+let skillsAnimated = false;
+let statsAnimated = false;
+
+const initializeProgressBars = () => {
   const progressBars = document.querySelectorAll('.progress-bar');
+  
+  progressBars.forEach(bar => {
+    const targetWidth = bar.style.width;
+    bar.setAttribute('data-target-width', targetWidth);
+    bar.style.width = '0%';
+    bar.style.transition = 'width 1.5s ease-in-out';
+    
+    const progressValue = bar.parentElement.querySelector('.progress-value');
+    if (progressValue) {
+      progressValue.textContent = '0%';
+    }
+  });
+};
+
+const animateSkillProgressBars = () => {
+  const progressBars = document.querySelectorAll('.progress-bar');
+  
+  progressBars.forEach((bar, index) => {
+    const targetWidth = bar.getAttribute('data-target-width');
+    const progressValue = bar.parentElement.querySelector('.progress-value');
+    
+    setTimeout(() => {
+      bar.style.width = targetWidth;
+      
+      if (progressValue) {
+        const targetPercent = parseInt(targetWidth);
+        animateCounter(progressValue, 0, targetPercent, 1500);
+      }
+    }, index * 200);
+  });
+};
+
+const animateCounter = (element, start, end, duration) => {
+  let startTimestamp = null;
+  const step = (timestamp) => {
+    if (!startTimestamp) startTimestamp = timestamp;
+    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+    const value = Math.floor(progress * (end - start) + start);
+    element.textContent = value + '%';
+    
+    if (progress < 1) {
+      window.requestAnimationFrame(step);
+    }
+  };
+  window.requestAnimationFrame(step);
+};
+
+const setFinalProgressState = () => {
+  const progressBars = document.querySelectorAll('.progress-bar');
+  
+  progressBars.forEach(bar => {
+    const targetWidth = bar.getAttribute('data-target-width');
+    const progressValue = bar.parentElement.querySelector('.progress-value');
+    
+    bar.style.width = targetWidth;
+    bar.style.transition = 'none';
+    
+    if (progressValue) {
+      const targetPercent = parseInt(targetWidth);
+      progressValue.textContent = targetPercent + '%';
+    }
+  });
+};
+
+const createSkillInteractions = () => {
+  const skillItems = document.querySelectorAll('.skill-item');
+  
+  skillItems.forEach(item => {
+    const progressBar = item.querySelector('.progress-bar');
+    
+    item.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-8px) scale(1.05)';
+      this.style.zIndex = '10';
+    });
+    
+    item.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateY(0) scale(1)';
+      this.style.zIndex = '1';
+    });
+    
+    item.addEventListener('click', function() {
+      if (progressBar && skillsAnimated) {
+        const targetWidth = progressBar.getAttribute('data-target-width');
+        const progressValue = progressBar.parentElement.querySelector('.progress-value');
+        
+        progressBar.style.width = '0%';
+        if (progressValue) {
+          progressValue.textContent = '0%';
+        }
+        
+        setTimeout(() => {
+          progressBar.style.width = targetWidth;
+          if (progressValue) {
+            const targetPercent = parseInt(targetWidth);
+            animateCounter(progressValue, 0, targetPercent, 1000);
+          }
+        }, 100);
+      }
+    });
+  });
+};
+
+const initSkillsObserver = () => {
+  const skillsSection = document.getElementById('skills');
+  
+  if (!skillsSection) return;
   
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        progressBars.forEach(bar => {
-          const targetWidth = bar.style.width;
-          bar.style.width = '0';
-          setTimeout(() => {
-            bar.style.width = targetWidth;
-          }, 100);
-        });
-        observer.unobserve(entry.target);
+      if (entry.isIntersecting && !skillsAnimated) {
+        skillsAnimated = true;
+        animateSkillProgressBars();
+        localStorage.setItem('skillsAnimated', 'true');
       }
     });
-  }, { threshold: 0.5 });
+  }, {
+    threshold: 0.3,
+    rootMargin: '0px 0px -100px 0px'
+  });
+  
+  observer.observe(skillsSection);
+};
 
-  if (skillsSection) {
-    observer.observe(skillsSection);
+window.addEventListener('scroll', () => {
+  const header = document.querySelector('header');
+  if (window.scrollY > 100) {
+    header.style.background = 'rgba(13, 37, 63, 0.95)';
+    header.style.boxShadow = '0 5px 20px rgba(0, 0, 0, 0.3)';
+  } else {
+    header.style.background = 'rgba(13, 37, 63, 0.9)';
+    header.style.boxShadow = 'none';
   }
-}
-
-// Call the function when the page loads
-document.addEventListener('DOMContentLoaded', animateProgressBars);
-
-=======
-particlesJS("particles-js", {
-  "particles": {
-    "number": {
-      "value": 80,
-      "density": { "enable": true, "value_area": 800 }
-    },
-    "color": { "value": "#ffffff" },
-    "shape": {
-      "type": "circle",
-      "stroke": { "width": 0, "color": "#000000" }
-    },
-    "opacity": {
-      "value": 0.5,
-      "random": false
-    },
-    "size": {
-      "value": 3,
-      "random": true
-    },
-    "line_linked": {
-      "enable": true,
-      "distance": 150,
-      "color": "#ffffff",
-      "opacity": 0.4,
-      "width": 1
-    },
-    "move": {
-      "enable": true,
-      "speed": 2,
-      "direction": "none",
-      "straight": false,
-      "out_mode": "bounce"
-    }
-  },
-  "interactivity": {
-    "detect_on": "canvas",
-    "events": {
-      "onhover": { "enable": true, "mode": "grab" },
-      "onclick": { "enable": true, "mode": "push" }
-    },
-    "modes": {
-      "grab": { "distance": 200, "line_linked": { "opacity": 1 } },
-      "push": { "particles_nb": 4 }
-    }
-  },
-  "retina_detect": true
 });
 
-// Animate progress bars when skills section is in view
-function animateProgressBars() {
-  const skillsSection = document.getElementById('skills');
-  const progressBars = document.querySelectorAll('.progress-bar');
-  
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        progressBars.forEach(bar => {
-          const targetWidth = bar.style.width;
-          bar.style.width = '0';
-          setTimeout(() => {
-            bar.style.width = targetWidth;
-          }, 100);
-        });
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.5 });
+const contactForm = document.querySelector('form');
+if (contactForm) {
+  contactForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const name = this.querySelector('input[type="text"]').value;
+    const email = this.querySelector('input[type="email"]').value;
+    const message = this.querySelector('textarea').value;
+    
+    if (!name || !email || !message) {
+      alert('Please fill in all fields');
+      return;
+    }
+    
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    
+    submitBtn.textContent = 'Sending...';
+    submitBtn.disabled = true;
+    
+    setTimeout(() => {
+      alert('Thank you for your message! I will get back to you soon.');
+      this.reset();
+      submitBtn.textContent = originalText;
+      submitBtn.disabled = false;
+    }, 2000);
+  });
+}
 
-  if (skillsSection) {
-    observer.observe(skillsSection);
+document.querySelectorAll('.education-card').forEach(card => {
+  card.addEventListener('mouseenter', function() {
+    this.style.transform = 'translateY(-15px) scale(1.02)';
+  });
+  
+  card.addEventListener('mouseleave', function() {
+    this.style.transform = 'translateY(0) scale(1)';
+  });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  const savedState = localStorage.getItem('skillsAnimated');
+  
+  if (savedState === 'true') {
+    skillsAnimated = true;
+    setFinalProgressState();
+  } else {
+    initializeProgressBars();
+  }
+  
+  initSkillsObserver();
+  createSkillInteractions();
+  
+  document.body.style.opacity = '0';
+  setTimeout(() => {
+    document.body.style.transition = 'opacity 1s ease';
+    document.body.style.opacity = '1';
+  }, 100);
+});
+
+const scrollToTop = document.createElement('button');
+scrollToTop.innerHTML = '<i class="fas fa-arrow-up"></i>';
+scrollToTop.className = 'scroll-to-top-btn';
+scrollToTop.style.cssText = `
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1976d2, #42a5f5);
+  color: white;
+  border: none;
+  font-size: 20px;
+  font-weight: 900;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(25, 118, 210, 0.4);
+  backdrop-filter: blur(10px);
+`;
+
+document.body.appendChild(scrollToTop);
+
+scrollToTop.addEventListener('click', () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+});
+
+scrollToTop.addEventListener('mouseenter', () => {
+  scrollToTop.style.transform = 'translateY(-2px) scale(1.1)';
+  scrollToTop.style.boxShadow = '0 8px 25px rgba(25, 118, 210, 0.6)';
+  scrollToTop.style.background = 'linear-gradient(135deg, #42a5f5, #1976d2)';
+});
+
+scrollToTop.addEventListener('mouseleave', () => {
+  scrollToTop.style.transform = 'translateY(0) scale(1)';
+  scrollToTop.style.boxShadow = '0 4px 15px rgba(25, 118, 210, 0.4)';
+  scrollToTop.style.background = 'linear-gradient(135deg, #1976d2, #42a5f5)';
+});
+
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 500) {
+    scrollToTop.style.opacity = '1';
+    scrollToTop.style.transform = 'translateY(0)';
+  } else {
+    scrollToTop.style.opacity = '0';
+    scrollToTop.style.transform = 'translateY(20px)';
+  }
+});
+
+function initTypingEffect() {
+  const heroTitle = document.querySelector('.hero-left span');
+  if (heroTitle) {
+    const originalText = heroTitle.textContent;
+    
+    if (originalText && !heroTitle.classList.contains('typed')) {
+      heroTitle.textContent = '';
+      
+      let i = 0;
+      const typeWriter = () => {
+        if (i < originalText.length) {
+          heroTitle.textContent += originalText.charAt(i);
+          i++;
+          setTimeout(typeWriter, 100);
+        } else {
+          heroTitle.classList.add('typed');
+        }
+      };
+      
+      setTimeout(typeWriter, 1000);
+    }
   }
 }
 
-// Call the function when the page loads
-document.addEventListener('DOMContentLoaded', animateProgressBars);
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+`;
+document.head.appendChild(style);
 
->>>>>>> bb88f246f4c91bf71740adc68874e153fd696c2f
+document.addEventListener('DOMContentLoaded', function() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const publicationCards = document.querySelectorAll('.publication-card:not(.template)');
+    
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            const filter = this.getAttribute('data-filter');
+            
+            publicationCards.forEach(card => {
+                const category = card.getAttribute('data-category');
+                
+                if (filter === 'all' || category === filter) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const experienceCards = document.querySelectorAll('.experience-card:not(.template)');
+    
+    experienceCards.forEach(card => {
+        card.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') return;
+            this.classList.toggle('active');
+        });
+        
+        card.addEventListener('mouseenter', function() {
+            if (!this.classList.contains('active')) {
+                this.style.transform = 'translateY(-3px)';
+            }
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            if (!this.classList.contains('active')) {
+                this.style.transform = 'translateY(0)';
+            }
+        });
+    });
+});
+
+window.addEventListener('load', function() {
+  const projectsContainer = document.getElementById('projects-container');
+  if (projectsContainer) {
+    const staticProjects = projectsContainer.querySelectorAll('.static-project');
+    staticProjects.forEach(project => {
+      project.style.display = 'flex';
+    });
+  }
+});
+
+function initLiveProgressBars() {
+  const progressBars = document.querySelectorAll('.progress-bar');
+  
+  progressBars.forEach(bar => {
+    const targetWidth = bar.getAttribute('style')?.match(/width:\s*([\d.]+%)/)?.[1] 
+                      || bar.getAttribute('data-progress') 
+                      || '0%';
+    
+    bar.style.width = '0%';
+    bar.style.transition = 'width 1.8s ease-in-out';
+    bar.style.background = 'linear-gradient(90deg, #1976d2, #90caf9, #1976d2)';
+    bar.style.backgroundSize = '200% 100%';
+    bar.style.animation = 'progressPulse 2s ease-in-out infinite';
+
+    setTimeout(() => {
+      bar.style.width = targetWidth;
+    }, 300);
+
+    bar.parentElement.addEventListener('mouseenter', function() {
+      bar.style.animation = 'progressPulse 0.5s ease-in-out infinite';
+    });
+
+    bar.parentElement.addEventListener('mouseleave', function() {
+      bar.style.animation = 'progressPulse 2s ease-in-out infinite';
+    });
+  });
+}
+
+const progressStyle = document.createElement('style');
+progressStyle.textContent = `
+  @keyframes progressPulse {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  .scroll-to-top-btn {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1976d2, #42a5f5);
+    color: white;
+    border: none;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(25, 118, 210, 0.4);
+    backdrop-filter: blur(10px);
+  }
+
+  .scroll-to-top-btn:hover {
+    transform: translateY(-2px) scale(1.1);
+    box-shadow: 0 8px 25px rgba(25, 118, 210, 0.6);
+  }
+
+  .scroll-to-top-btn:active {
+    transform: translateY(0) scale(0.95);
+  }
+`;
+document.head.appendChild(progressStyle);
+
+window.addEventListener('DOMContentLoaded', () => {
+  const previousInit = typeof initSkillsObserver === 'function' ? initSkillsObserver : null;
+
+  window.initSkillsObserver = function() {
+    const skillsSection = document.getElementById('skills');
+    if (!skillsSection) return;
+
+    window.skillsAnimated = window.skillsAnimated || false;
+    window.animateSkillProgressBars = window.animateSkillProgressBars || function() {};
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !window.skillsAnimated) {
+          window.skillsAnimated = true;
+          window.animateSkillProgressBars();
+          setTimeout(initLiveProgressBars, 1000);
+          localStorage.setItem('skillsAnimated', 'true');
+        }
+      });
+    }, {
+      threshold: 0.3,
+      rootMargin: '0px 0px -100px 0px'
+    });
+
+    observer.observe(skillsSection);
+
+    if (previousInit) previousInit();
+  };
+
+  window.initSkillsObserver();
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(() => {
+    initTypingEffect();
+  }, 2000);
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  initializeProgressBars();
+  initSkillsObserver();
+  createSkillInteractions();
+  document.body.style.opacity = '1';
+});
