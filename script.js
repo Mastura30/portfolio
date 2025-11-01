@@ -52,19 +52,21 @@ document.querySelectorAll('nav a').forEach(anchor => {
 let skillsAnimated = false;
 let statsAnimated = false;
 
+// Initialize progress bars with correct percentages
 const initializeProgressBars = () => {
   const progressBars = document.querySelectorAll('.progress-bar');
   
-  progressBars.forEach(bar => {
-    const targetWidth = bar.style.width;
-    bar.setAttribute('data-target-width', targetWidth);
+  progressBars.forEach((bar, index) => {
+    const progressValue = bar.parentElement.querySelector('.progress-value');
+    
+    // Set correct percentage values immediately
+    if (progressValue) {
+      const percentages = ['90%', '85%', '75%', '70%', '90%'];
+      progressValue.textContent = percentages[index] || '0%';
+    }
+    
     bar.style.width = '0%';
     bar.style.transition = 'width 1.5s ease-in-out';
-    
-    const progressValue = bar.parentElement.querySelector('.progress-value');
-    if (progressValue) {
-      progressValue.textContent = '0%';
-    }
   });
 };
 
@@ -72,14 +74,14 @@ const animateSkillProgressBars = () => {
   const progressBars = document.querySelectorAll('.progress-bar');
   
   progressBars.forEach((bar, index) => {
-    const targetWidth = bar.getAttribute('data-target-width');
     const progressValue = bar.parentElement.querySelector('.progress-value');
+    const percentages = [90, 85, 75, 70, 90];
+    const targetPercent = percentages[index] || 0;
     
     setTimeout(() => {
-      bar.style.width = targetWidth;
+      bar.style.width = targetPercent + '%';
       
       if (progressValue) {
-        const targetPercent = parseInt(targetWidth);
         animateCounter(progressValue, 0, targetPercent, 1500);
       }
     }, index * 200);
@@ -103,16 +105,16 @@ const animateCounter = (element, start, end, duration) => {
 
 const setFinalProgressState = () => {
   const progressBars = document.querySelectorAll('.progress-bar');
+  const percentages = [90, 85, 75, 70, 90];
   
-  progressBars.forEach(bar => {
-    const targetWidth = bar.getAttribute('data-target-width');
+  progressBars.forEach((bar, index) => {
     const progressValue = bar.parentElement.querySelector('.progress-value');
+    const targetPercent = percentages[index] || 0;
     
-    bar.style.width = targetWidth;
+    bar.style.width = targetPercent + '%';
     bar.style.transition = 'none';
     
     if (progressValue) {
-      const targetPercent = parseInt(targetWidth);
       progressValue.textContent = targetPercent + '%';
     }
   });
@@ -136,20 +138,15 @@ const createSkillInteractions = () => {
     
     item.addEventListener('click', function() {
       if (progressBar && skillsAnimated) {
-        const targetWidth = progressBar.getAttribute('data-target-width');
         const progressValue = progressBar.parentElement.querySelector('.progress-value');
+        const currentPercent = parseInt(progressValue.textContent);
         
         progressBar.style.width = '0%';
-        if (progressValue) {
-          progressValue.textContent = '0%';
-        }
+        progressValue.textContent = '0%';
         
         setTimeout(() => {
-          progressBar.style.width = targetWidth;
-          if (progressValue) {
-            const targetPercent = parseInt(targetWidth);
-            animateCounter(progressValue, 0, targetPercent, 1000);
-          }
+          progressBar.style.width = currentPercent + '%';
+          animateCounter(progressValue, 0, currentPercent, 1000);
         }, 100);
       }
     });
@@ -247,6 +244,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }, 100);
 });
 
+// Enhanced Scroll-to-Top Button
 const scrollToTop = document.createElement('button');
 scrollToTop.innerHTML = '<i class="fas fa-arrow-up"></i>';
 scrollToTop.className = 'scroll-to-top-btn';
@@ -257,7 +255,7 @@ scrollToTop.style.cssText = `
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #1976d2, #42a5f5);
+  background: linear-gradient(135deg, #42a5f5, #1976d2);
   color: white;
   border: none;
   font-size: 20px;
@@ -270,7 +268,7 @@ scrollToTop.style.cssText = `
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 15px rgba(25, 118, 210, 0.4);
+  box-shadow: 0 4px 20px rgba(66, 165, 245, 0.8);
   backdrop-filter: blur(10px);
 `;
 
@@ -285,14 +283,14 @@ scrollToTop.addEventListener('click', () => {
 
 scrollToTop.addEventListener('mouseenter', () => {
   scrollToTop.style.transform = 'translateY(-2px) scale(1.1)';
-  scrollToTop.style.boxShadow = '0 8px 25px rgba(25, 118, 210, 0.6)';
-  scrollToTop.style.background = 'linear-gradient(135deg, #42a5f5, #1976d2)';
+  scrollToTop.style.boxShadow = '0 8px 25px rgba(66, 165, 245, 1)';
+  scrollToTop.style.background = 'linear-gradient(135deg, #64b5f6, #42a5f5)';
 });
 
 scrollToTop.addEventListener('mouseleave', () => {
   scrollToTop.style.transform = 'translateY(0) scale(1)';
-  scrollToTop.style.boxShadow = '0 4px 15px rgba(25, 118, 210, 0.4)';
-  scrollToTop.style.background = 'linear-gradient(135deg, #1976d2, #42a5f5)';
+  scrollToTop.style.boxShadow = '0 4px 20px rgba(66, 165, 245, 0.8)';
+  scrollToTop.style.background = 'linear-gradient(135deg, #42a5f5, #1976d2)';
 });
 
 window.addEventListener('scroll', () => {
@@ -302,6 +300,61 @@ window.addEventListener('scroll', () => {
   } else {
     scrollToTop.style.opacity = '0';
     scrollToTop.style.transform = 'translateY(20px)';
+  }
+});
+
+// New Reload Button
+const reloadButton = document.createElement('button');
+reloadButton.innerHTML = '<i class="fas fa-redo"></i>';
+reloadButton.className = 'reload-btn';
+reloadButton.style.cssText = `
+  position: fixed;
+  bottom: 90px;
+  right: 25px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+  color: white;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+  backdrop-filter: blur(10px);
+`;
+
+document.body.appendChild(reloadButton);
+
+reloadButton.addEventListener('click', () => {
+  location.reload();
+});
+
+reloadButton.addEventListener('mouseenter', () => {
+  reloadButton.style.transform = 'translateY(-2px) scale(1.1)';
+  reloadButton.style.boxShadow = '0 8px 25px rgba(255, 107, 107, 0.6)';
+  reloadButton.style.background = 'linear-gradient(135deg, #ff8a8a, #ff6b6b)';
+});
+
+reloadButton.addEventListener('mouseleave', () => {
+  reloadButton.style.transform = 'translateY(0) scale(1)';
+  reloadButton.style.boxShadow = '0 4px 15px rgba(255, 107, 107, 0.4)';
+  reloadButton.style.background = 'linear-gradient(135deg, #ff6b6b, #ee5a52)';
+});
+
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 500) {
+    reloadButton.style.opacity = '1';
+    reloadButton.style.transform = 'translateY(0)';
+  } else {
+    reloadButton.style.opacity = '0';
+    reloadButton.style.transform = 'translateY(20px)';
   }
 });
 
@@ -335,6 +388,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
+// Enhanced Typing Effect - Immediate Start
 function initTypingEffect() {
   const heroTitle = document.querySelector('.hero-left span');
   if (heroTitle) {
@@ -342,19 +396,21 @@ function initTypingEffect() {
     
     if (originalText && !heroTitle.classList.contains('typed')) {
       heroTitle.textContent = '';
+      heroTitle.style.borderRight = 'none'; // Remove cursor
       
       let i = 0;
       const typeWriter = () => {
         if (i < originalText.length) {
           heroTitle.textContent += originalText.charAt(i);
           i++;
-          setTimeout(typeWriter, 100);
+          setTimeout(typeWriter, 60); // Faster typing speed
         } else {
           heroTitle.classList.add('typed');
         }
       };
       
-      setTimeout(typeWriter, 1000);
+      // Start immediately without delay
+      typeWriter();
     }
   }
 }
@@ -431,12 +487,9 @@ window.addEventListener('load', function() {
   }
 });
 
-
-
+// Start typing effect immediately when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
-  setTimeout(() => {
-    initTypingEffect();
-  }, 2000);
+  initTypingEffect();
 });
 
 document.addEventListener('DOMContentLoaded', function() {
