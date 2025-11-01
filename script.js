@@ -498,3 +498,79 @@ document.addEventListener('DOMContentLoaded', function() {
   createSkillInteractions();
   document.body.style.opacity = '1';
 });
+
+// Add this function to script.js (after the existing typing effect function)
+function initRoleRotation() {
+  const roleElement = document.createElement('p');
+  roleElement.className = 'hero-role';
+  roleElement.style.cssText = `
+    font-size: 1.8rem;
+    color: #90caf9;
+    margin: 1rem 0 2rem 0;
+    min-height: 2.5rem;
+    font-weight: 600;
+    text-align: left;
+  `;
+  
+  const heroLeft = document.querySelector('.hero-left');
+  const welcomeText = document.querySelector('.welcome-text');
+  
+  if (heroLeft && welcomeText) {
+    heroLeft.insertBefore(roleElement, welcomeText.nextSibling);
+    
+    const roles = [
+      'Web Designer',
+      'App Developer', 
+      'Junior Educational Consultant',
+      'UI/UX Enthusiast'
+    ];
+    
+    let currentRoleIndex = 0;
+    let currentCharIndex = 0;
+    let isDeleting = false;
+    let typingSpeed = 100;
+    
+    function typeRole() {
+      const currentRole = roles[currentRoleIndex];
+      
+      if (isDeleting) {
+        // Deleting text
+        roleElement.textContent = currentRole.substring(0, currentCharIndex - 1);
+        currentCharIndex--;
+        typingSpeed = 50; // Faster when deleting
+      } else {
+        // Typing text
+        roleElement.textContent = currentRole.substring(0, currentCharIndex + 1);
+        currentCharIndex++;
+        typingSpeed = 100; // Normal speed when typing
+      }
+      
+      if (!isDeleting && currentCharIndex === currentRole.length) {
+        // Finished typing, wait then start deleting
+        typingSpeed = 2000; // Pause at the end
+        isDeleting = true;
+      } else if (isDeleting && currentCharIndex === 0) {
+        // Finished deleting, move to next role
+        isDeleting = false;
+        currentRoleIndex = (currentRoleIndex + 1) % roles.length;
+        typingSpeed = 500; // Pause before next role
+      }
+      
+      setTimeout(typeRole, typingSpeed);
+    }
+    
+    // Start the animation after a short delay
+    setTimeout(typeRole, 1000);
+  }
+}
+
+// Update the DOMContentLoaded event to include the role rotation
+document.addEventListener('DOMContentLoaded', function() {
+  initTypingEffect();
+  setTimeout(initRoleRotation, 500); // Start role rotation shortly after
+  
+  initializeProgressBars();
+  initSkillsObserver();
+  createSkillInteractions();
+  document.body.style.opacity = '1';
+});
