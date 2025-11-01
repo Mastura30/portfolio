@@ -305,6 +305,36 @@ window.addEventListener('scroll', () => {
   }
 });
 
+// Mobile menu functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+  const nav = document.querySelector('nav');
+  
+  if (mobileMenuToggle && nav) {
+    mobileMenuToggle.addEventListener('click', function() {
+      this.classList.toggle('active');
+      nav.classList.toggle('active');
+    });
+    
+    // Close mobile menu when clicking on a link
+    const navLinks = document.querySelectorAll('nav a');
+    navLinks.forEach(link => {
+      link.addEventListener('click', function() {
+        mobileMenuToggle.classList.remove('active');
+        nav.classList.remove('active');
+      });
+    });
+    
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(event) {
+      if (!event.target.closest('header')) {
+        mobileMenuToggle.classList.remove('active');
+        nav.classList.remove('active');
+      }
+    });
+  }
+});
+
 function initTypingEffect() {
   const heroTitle = document.querySelector('.hero-left span');
   if (heroTitle) {
@@ -401,107 +431,7 @@ window.addEventListener('load', function() {
   }
 });
 
-function initLiveProgressBars() {
-  const progressBars = document.querySelectorAll('.progress-bar');
-  
-  progressBars.forEach(bar => {
-    const targetWidth = bar.getAttribute('style')?.match(/width:\s*([\d.]+%)/)?.[1] 
-                      || bar.getAttribute('data-progress') 
-                      || '0%';
-    
-    bar.style.width = '0%';
-    bar.style.transition = 'width 1.8s ease-in-out';
-    bar.style.background = 'linear-gradient(90deg, #1976d2, #90caf9, #1976d2)';
-    bar.style.backgroundSize = '200% 100%';
-    bar.style.animation = 'progressPulse 2s ease-in-out infinite';
 
-    setTimeout(() => {
-      bar.style.width = targetWidth;
-    }, 300);
-
-    bar.parentElement.addEventListener('mouseenter', function() {
-      bar.style.animation = 'progressPulse 0.5s ease-in-out infinite';
-    });
-
-    bar.parentElement.addEventListener('mouseleave', function() {
-      bar.style.animation = 'progressPulse 2s ease-in-out infinite';
-    });
-  });
-}
-
-const progressStyle = document.createElement('style');
-progressStyle.textContent = `
-  @keyframes progressPulse {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-  }
-
-  .scroll-to-top-btn {
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #1976d2, #42a5f5);
-    color: white;
-    border: none;
-    font-size: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 15px rgba(25, 118, 210, 0.4);
-    backdrop-filter: blur(10px);
-  }
-
-  .scroll-to-top-btn:hover {
-    transform: translateY(-2px) scale(1.1);
-    box-shadow: 0 8px 25px rgba(25, 118, 210, 0.6);
-  }
-
-  .scroll-to-top-btn:active {
-    transform: translateY(0) scale(0.95);
-  }
-`;
-document.head.appendChild(progressStyle);
-
-window.addEventListener('DOMContentLoaded', () => {
-  const previousInit = typeof initSkillsObserver === 'function' ? initSkillsObserver : null;
-
-  window.initSkillsObserver = function() {
-    const skillsSection = document.getElementById('skills');
-    if (!skillsSection) return;
-
-    window.skillsAnimated = window.skillsAnimated || false;
-    window.animateSkillProgressBars = window.animateSkillProgressBars || function() {};
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting && !window.skillsAnimated) {
-          window.skillsAnimated = true;
-          window.animateSkillProgressBars();
-          setTimeout(initLiveProgressBars, 1000);
-          localStorage.setItem('skillsAnimated', 'true');
-        }
-      });
-    }, {
-      threshold: 0.3,
-      rootMargin: '0px 0px -100px 0px'
-    });
-
-    observer.observe(skillsSection);
-
-    if (previousInit) previousInit();
-  };
-
-  window.initSkillsObserver();
-});
 
 document.addEventListener('DOMContentLoaded', function() {
   setTimeout(() => {

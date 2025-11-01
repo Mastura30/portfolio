@@ -46,32 +46,219 @@ body {
   100% { background-position: 100px 100px; }
 }
 
-/* Header */
+/* Header - Static & Responsive */
 header {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   padding: 1rem 1.5rem;
   background: rgba(13, 37, 63, 0.95);
-  position: sticky;
+  position: sticky; /* Changed from sticky to static */
   top: 0;
   z-index: 100;
   backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(144, 202, 249, 0.2);
 }
 
+/* Navigation Container */
+nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: auto; /* Push nav to the right to make space for admin button */
+}
+
+/* Navigation Links - Keep existing styles but make responsive */
 nav a {
   margin: 0 0.5rem;
   color: #fff;
   text-decoration: none;
   font-weight: 500;
-  transition: color 0.3s;
+  transition: all 0.3s ease;
   padding: 0.5rem 1rem;
   border-radius: 5px;
+  white-space: nowrap;
 }
 
 nav a:hover {
   color: #4dabf7;
   background: rgba(77, 171, 247, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Mobile Menu Toggle */
+.mobile-menu-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-left: auto;
+}
+
+.mobile-menu-toggle span {
+  display: block;
+  width: 25px;
+  height: 3px;
+  background: #fff;
+  margin: 2px 0;
+  transition: all 0.3s ease;
+  border-radius: 2px;
+}
+
+/* Mobile Menu Active State */
+.mobile-menu-toggle.active span:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+
+.mobile-menu-toggle.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.mobile-menu-toggle.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Admin Toggle Button - Keep existing position */
+.admin-toggle-btn {
+  position: static; /* Changed from fixed to static */
+  margin-right: auto; /* Push it to the left */
+  width: 115px;
+  height: 50px;
+  background: linear-gradient(135deg, #1976d2, #42a5f5);
+  color: white;
+  border: none;
+  border-radius: 15px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 1000;
+  box-shadow: 0 5px 15px rgba(25, 118, 210, 0.4);
+  transition: all 0.3s ease;
+}
+
+.admin-toggle-btn:hover {
+  box-shadow: 0 8px 25px rgba(25, 118, 210, 0.6);
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  header {
+    padding: 1rem;
+  }
+  
+  nav a {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.9rem;
+  }
+  
+  .admin-toggle-btn {
+    width: 100px;
+    height: 45px;
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  header {
+    padding: 0.8rem 1rem;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  
+  .admin-toggle-btn {
+    position: static;
+    order: 1;
+    margin-right: 0;
+    width: 90px;
+    height: 40px;
+    font-size: 1rem;
+  }
+  
+  .mobile-menu-toggle {
+    display: flex;
+    order: 2;
+  }
+  
+  nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(13, 37, 63, 0.98);
+    flex-direction: column;
+    gap: 0;
+    margin-top: 0;
+    padding: 1rem;
+    border-top: 1px solid rgba(144, 202, 249, 0.2);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(20px);
+  }
+  
+  nav.active {
+    display: flex;
+  }
+  
+  nav a {
+    margin: 0;
+    padding: 0.8rem 1rem;
+    width: 100%;
+    text-align: center;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+  }
+  
+  nav a:last-child {
+    margin-bottom: 0;
+  }
+  
+  nav a:hover {
+    transform: translateX(5px);
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    padding: 0.6rem 0.8rem;
+  }
+  
+  .admin-toggle-btn {
+    width: 80px;
+    height: 35px;
+    font-size: 0.9rem;
+    border-radius: 10px;
+  }
+  
+  nav a {
+    padding: 0.7rem 0.8rem;
+    font-size: 0.9rem;
+  }
+  
+  .mobile-menu-toggle {
+    width: 25px;
+    height: 25px;
+  }
+  
+  .mobile-menu-toggle span {
+    width: 20px;
+    height: 2px;
+  }
+}
+
+/* Smooth transitions for all navigation elements */
+header, nav, nav a, .mobile-menu-toggle, .admin-toggle-btn {
+  transition: all 0.3s ease;
+}
+
+/* Ensure header stays on top of other content */
+header {
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
 }
 
 /* Button Styles - Blue Theme */
@@ -652,30 +839,171 @@ nav a:hover {
 .progress-bar {
   flex: 1;
   height: 8px;
-  background: rgba(255, 255, 255, 0.2); /* Track color */
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 4px;
   overflow: hidden;
   position: relative;
 }
 
-/* Progress bar fill - this is what gets animated */
+/* Progress bar fill - CSS animated */
 .progress-bar::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   height: 100%;
-  width: 0%; /* Start at 0% - JavaScript will animate this */
-  background: linear-gradient(90deg, #1976d2, #42a5f5); /* Fill color */
+  width: 0%;
+  background: linear-gradient(90deg, #1976d2, #42a5f5, #90caf9);
   border-radius: 4px;
-  transition: width 1.5s ease-in-out;
+  animation: fillProgress 1.5s ease-out forwards;
+  box-shadow: 0 0 8px rgba(66, 165, 245, 0.3);
 }
 
+/* Individual progress animations with correct percentages from your image */
+.skill-item:nth-child(1) .progress-bar::before {
+  animation-delay: 0.1s;
+  animation: fillProgress 1.5s ease-out 0.1s forwards;
+  --progress-width: 90%; /* HTML5 */
+}
+
+.skill-item:nth-child(2) .progress-bar::before {
+  animation-delay: 0.3s;
+  animation: fillProgress 1.5s ease-out 0.3s forwards;
+  --progress-width: 85%; /* CSS3/SASS */
+}
+
+.skill-item:nth-child(3) .progress-bar::before {
+  animation-delay: 0.5s;
+  animation: fillProgress 1.5s ease-out 0.5s forwards;
+  --progress-width: 75%; /* JavaScript */
+}
+
+.skill-item:nth-child(4) .progress-bar::before {
+  animation-delay: 0.7s;
+  animation: fillProgress 1.5s ease-out 0.7s forwards;
+  --progress-width: 70%; /* Automation */
+}
+
+.skill-item:nth-child(5) .progress-bar::before {
+  animation-delay: 0.9s;
+  animation: fillProgress 1.5s ease-out 0.9s forwards;
+  --progress-width: 90%; /* Git/GitHub */
+}
+
+/* Progress animation keyframes */
+@keyframes fillProgress {
+  0% {
+    width: 0%;
+    transform: scaleX(0);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scaleX(1.02);
+    opacity: 1;
+  }
+  100% {
+    width: var(--progress-width, 80%);
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+/* Percentage value animation */
 .progress-value {
   font-size: 0.9rem;
   color: #90caf9;
   font-weight: bold;
   min-width: 40px;
+  opacity: 0;
+  animation: fadeInValue 0.5s ease-out forwards;
+}
+
+/* Individual percentage value delays */
+.skill-item:nth-child(1) .progress-value {
+  animation-delay: 1.6s; /* HTML5 - 90% */
+}
+.skill-item:nth-child(2) .progress-value {
+  animation-delay: 1.8s; /* CSS3/SASS - 85% */
+}
+.skill-item:nth-child(3) .progress-value {
+  animation-delay: 2.0s; /* JavaScript - 75% */
+}
+.skill-item:nth-child(4) .progress-value {
+  animation-delay: 2.2s; /* Automation - 70% */
+}
+.skill-item:nth-child(5) .progress-value {
+  animation-delay: 2.4s; /* Git/GitHub - 80% */
+}
+
+@keyframes fadeInValue {
+  0% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Soft Skills - No progress bars */
+.skill-category:nth-child(2) .skill-item {
+  justify-content: flex-start;
+}
+
+.skill-category:nth-child(2) .progress-container {
+  display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .skills-container {
+    gap: 2rem;
+  }
+  
+  .skill-category {
+    min-width: 100%;
+    padding: 1.5rem;
+  }
+  
+  .skill-item {
+    padding: 0.8rem;
+  }
+  
+  .progress-bar::before {
+    animation-duration: 1s; /* Faster on mobile */
+  }
+  
+  /* Adjust percentage delays for mobile */
+  .skill-item:nth-child(1) .progress-value { animation-delay: 1.1s; }
+  .skill-item:nth-child(2) .progress-value { animation-delay: 1.3s; }
+  .skill-item:nth-child(3) .progress-value { animation-delay: 1.5s; }
+  .skill-item:nth-child(4) .progress-value { animation-delay: 1.7s; }
+  .skill-item:nth-child(5) .progress-value { animation-delay: 1.9s; }
+}
+
+/* Animation for when section comes into view */
+#skills .skill-item {
+  animation: slideInUp 0.6s ease-out;
+}
+
+#skills .skill-item:nth-child(odd) {
+  animation-delay: 0.1s;
+}
+
+#skills .skill-item:nth-child(even) {
+  animation-delay: 0.2s;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Projects Section - Blue Theme */
@@ -2082,10 +2410,10 @@ footer {
 
 .admin-toggle-btn {
   position: fixed;
-  top: 20px;
+  top: 5%;
   left: 5%;
   width: 115px;
-  height: 50px;
+  height: 40px;
   background: linear-gradient(135deg, #1976d2, #42a5f5);
   color: white;
   border: none;
@@ -2099,6 +2427,13 @@ footer {
 
 .admin-toggle-btn:hover {
   box-shadow: 0 8px 25px rgba(25, 118, 210, 0.6);
+}
+
+@media (max-width: 768px) {
+  .admin-toggle-btn {
+    top: 2%;
+    left: 2%;
+  }
 }
 
 /* Add Form Styles */
