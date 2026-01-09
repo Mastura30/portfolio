@@ -52,7 +52,7 @@ I'm **Mastura Jahan Maria**, a passionate developer focused on creating clean, f
 
 **Tools & Deployment:**  
 - VS Code  
-- GitHub Pages  
+- GitHub & Vercel Pages  
 - Git version control
 
 ---
